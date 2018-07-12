@@ -24,6 +24,13 @@
     var canvas = document.getElementById('myCanvas');
     paper.setup(canvas);
     var tool = new paper.Tool();
+    var path;
+    path = new paper.Path();
+    path.strokeColor = 'black';
+  
+    tool.onMouseMove = function(event) {
+      path.add(event.point);
+    }
 
     // getting the URL (you may want to use for Exercise 3)
     var url = window.location.href;
