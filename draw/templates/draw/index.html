@@ -39,7 +39,7 @@
     }
   
     var colors = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 
-    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 
+    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 
     'silver', 'teal'];
   
     
@@ -57,7 +57,7 @@
       var y = event.gamma; // In degree in the range [-90,90]
       if(y>20){
         console.log("hello");
-        path.strokeColor = 'green';
+        path.strokeColor = 'red';
       }
     }
     window.addEventListener("deviceorientation", handleOrientation, true);
@@ -82,8 +82,14 @@
         seenColors[parsedMessage.color] = new paper.Path();
         seenColors[parsedMessage.color].strokeColor = parsedMessage.color;
       }
+      
+      if (url === "http://p4-ccayabyab-ccayabyab240372.codeanyapp.com:8000/draw/?size=small"
+         && (myColor != parsedMessage.color)) {
+        
+      } else {
         seenColors[parsedMessage.color].add(new paper.Point(parsedMessage.x, parsedMessage.y));
         path = seenColors[parsedMessage.color];
+      }
     };
   
 </script>
