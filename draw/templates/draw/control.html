@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Car</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'draw/vendor/bootstrap/css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'draw/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'draw/vendor/paper/paper-full.min.js' %}"></script>
+
+    <style type="text/css">
+      body{
+        background-image: url("https://i.pinimg.com/564x/b6/41/1b/b6411b655abde963055aa0e736087669.jpg")
+      }
+      .car{
+        
+      }
+    </style>
+
+</head>
+<body>
+    <div class="car"></div>
+
+</body>
+<script>
+var car   = document.querySelector('.car');
+var garden = document.querySelector('.garden');
+var output = document.querySelector('.output');
+
+var maxX = garden.clientWidth  - ball.clientWidth;
+var maxY = garden.clientHeight - ball.clientHeight;
+
+var handleOrientation = function(event) {
+  // Part 1: Set x and y based on the appropriate angles.
+  var x = event.gamma;
+  var y = event.beta;
+  
+  // Part 2: Update x and y appropriately if the device is facing downwards
+  if (y > 90) {
+    y = 90;
+  } else if (y < -90) {
+    y = -90;
+  }
+  
+  // Part 3: Do some math to set the ball appropriately. To start, the ball will always be in the center.
+  ball.style.left = (maxX*(x+90)/180) + "px";
+  ball.style.top  = (maxY*(y+90)/180) + "px";
+}
+
+// Unfortunately, codepen/Chrome interacts weirdly with trying to add listeners to deviceorientation :(
+// Instead, we'll call the function above directly. Test it out with a few values!
+
+handleOrientation({alpha: 0, beta: 50, gamma: -40})
+  
+  
+</script>
+</html>

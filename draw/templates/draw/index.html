@@ -23,20 +23,20 @@
 
     // setting up the canvas and one paper tool
     var canvas = document.getElementById('myCanvas');
-//     const canv = canvas.getContext("2d");
+     const canv = canvas.getContext("2d");
     paper.setup(canvas);
     var tool = new paper.Tool();
-//     var shakeEvent = new Shake({threshold: 15});
-//     shakeEvent.start();
-//     window.addEventListener('shake', function(){
-//         //canv.clearRect(0, 0, canvas.width, canvas.height);
-//         location.reload();
-//     },false);
+    var shakeEvent = new Shake({threshold: 15});
+    shakeEvent.start();
+    window.addEventListener('shake', function(){
+        //canv.clearRect(0, 0, canvas.width, canvas.height);
+        location.reload();
+    },false);
 
-//     //stop listening
-//     function stopShake(){
-//         shakeEvent.stop();
-//     }
+    //stop listening
+    function stopShake(){
+        shakeEvent.stop();
+    }
   
     var colors = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 
     'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 
@@ -57,9 +57,10 @@
       var y = event.gamma; // In degree in the range [-90,90]
       if(y>20){
         console.log("hello");
-        path.strokeColor = 'yellow';
+        path.strokeColor = 'green';
       }
     }
+    window.addEventListener("deviceorientation", handleOrientation, true);
 
     var myColor = colors[getRndInteger(0, colors.length)];
     var seenColors = new Object();
@@ -69,6 +70,7 @@
 
     // getting the URL (you may want to use for Exercise 3)
     var url = window.location.href;
+    console.log(url)
 
     var socket = new WebSocket(
         'ws://p4-ccayabyab-ccayabyab240372.codeanyapp.com:8765/');
@@ -81,6 +83,7 @@
         seenColors[parsedMessage.color].strokeColor = parsedMessage.color;
       }
         seenColors[parsedMessage.color].add(new paper.Point(parsedMessage.x, parsedMessage.y));
+        path = seenColors[parsedMessage.color];
     };
   
 </script>
