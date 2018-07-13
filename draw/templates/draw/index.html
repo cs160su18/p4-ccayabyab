@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'draw/vendor/bootstrap/css/bootstrap.min.css' %}">
     <script type="text/javascript" src="{% static 'draw/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'draw/vendor/paper/paper-full.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/alexgibson/shake.js/master/shake.js"></script>
 
     <style type="text/css">
     </style>
@@ -22,16 +23,48 @@
 
     // setting up the canvas and one paper tool
     var canvas = document.getElementById('myCanvas');
+//     const canv = canvas.getContext("2d");
     paper.setup(canvas);
     var tool = new paper.Tool();
+//     var shakeEvent = new Shake({threshold: 15});
+//     shakeEvent.start();
+//     window.addEventListener('shake', function(){
+//         //canv.clearRect(0, 0, canvas.width, canvas.height);
+//         location.reload();
+//     },false);
+
+//     //stop listening
+//     function stopShake(){
+//         shakeEvent.stop();
+//     }
   
+    var colors = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 
+    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 
+    'silver', 'teal'];
+  
+    
+ 
+    //from https://www.w3schools.com/js/js_random.asp
+    function getRndInteger(min, max) {
+      return Math.floor(Math.random() * (max - min) ) + min;
+    }
+
     var path;
     path = new paper.Path();
     path.strokeColor = 'black';
   
-    tool.onMouseMove = function(event) {
-      path.add(event.point);
-      socket.send(JSON.stringify({ x:event.point.x , y: event.point.y }));
+    function handleOrientation(event) {
+      var y = event.gamma; // In degree in the range [-90,90]
+      if(y>20){
+        console.log("hello");
+        path.strokeColor = 'yellow';
+      }
+    }
+
+    var myColor = colors[getRndInteger(0, colors.length)];
+    var seenColors = new Object();
+    tool.onMouseMove = function(event) {   
+      socket.send(JSON.stringify({ x: event.point.x , y: event.point.y, color: myColor }));
     };
 
     // getting the URL (you may want to use for Exercise 3)
@@ -39,11 +72,15 @@
 
     var socket = new WebSocket(
         'ws://p4-ccayabyab-ccayabyab240372.codeanyapp.com:8765/');
- 
+    
     socket.onmessage = function(receivedMessage) {
       var receive = receivedMessage.data
-      var xy = JSON.parse(receive);
-      path.add(new paper.Point(xy.x, xy.y));
+      var parsedMessage = JSON.parse(receive);
+      if (! (parsedMessage.color in seenColors)) {
+        seenColors[parsedMessage.color] = new paper.Path();
+        seenColors[parsedMessage.color].strokeColor = parsedMessage.color;
+      }
+        seenColors[parsedMessage.color].add(new paper.Point(parsedMessage.x, parsedMessage.y));
     };
   
 </script>
