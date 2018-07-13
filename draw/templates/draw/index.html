@@ -24,20 +24,27 @@
     var canvas = document.getElementById('myCanvas');
     paper.setup(canvas);
     var tool = new paper.Tool();
+  
     var path;
     path = new paper.Path();
     path.strokeColor = 'black';
   
     tool.onMouseMove = function(event) {
       path.add(event.point);
-    }
+      socket.send(JSON.stringify({ x:event.point.x , y: event.point.y }));
+    };
 
     // getting the URL (you may want to use for Exercise 3)
     var url = window.location.href;
 
-    // var socket = new WebSocket(
-    //     'ws://your url here:8765/');
-
-
+    var socket = new WebSocket(
+        'ws://p4-ccayabyab-ccayabyab240372.codeanyapp.com:8765/');
+ 
+    socket.onmessage = function(receivedMessage) {
+      var receive = receivedMessage.data
+      var xy = JSON.parse(receive);
+      path.add(new paper.Point(xy.x, xy.y));
+    };
+  
 </script>
 </html>
